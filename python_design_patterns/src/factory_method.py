@@ -23,7 +23,7 @@ class JsonConnector:
 class XmlConnector:
     """解析XML文件"""
     def __init__(self, filepath):
-        self.tree = etree.parse(filepath)
+        self.tree = tree.parse(filepath)
         
     @property
     def parsed_data(self):
