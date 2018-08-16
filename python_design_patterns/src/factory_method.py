@@ -8,6 +8,7 @@ import json
 注意编程中的代码组织方式和思想。
 """
 
+
 class JsonConnector:
     """解析json文件"""
     def __init__(self, filepath):

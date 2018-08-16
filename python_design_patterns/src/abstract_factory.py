@@ -5,6 +5,7 @@
 游戏一: 青蛙遇到障碍物虫子，吃掉它。
 """
 
+
 class Frog:
     """
     Frog 英 /frɒg/ 青蛙
@@ -64,7 +65,7 @@ class Wizard:
     def __str__(self):
         return self.name
 
-    def intercat_with(self, obstacle):
+    def interact_with(self, obstacle):
         print('{} the Wizard encounters {} and {}!'.format(self, obstacle, obstacle.action()))
 
 
@@ -98,7 +99,7 @@ class GameEvn:
     """
     
     def __init__(self, factory):
-        self.hero = factory.make_charcater()
+        self.hero = factory.make_character()
         self.obstacle = factory.make_obstacle()
     
     def play(self):
@@ -111,14 +112,14 @@ def validate_age(name):
     提示用户输入一个有效的年龄,若年龄无效，返回一个元组，第一个元素为False；
     若年龄没问题，第一个元素为True，第二个元素为用户年龄。
     """
-    
+
+    age = input('Welcome {}. How old are you?'.format(name))
     try:
-        age = input('Welcome {}. How old are you?'.format(name))
         age = int(age)
     except ValueError as err:
         print('Age {} is invalid, please try again ...'.format(age))
-        return (False, age)
-    return (True, age)
+        return False, age
+    return True, age
 
 
 def main():
@@ -126,9 +127,10 @@ def main():
     询问用户的姓名和年龄，并根据年龄确定该玩哪个游戏。
     """
     name = input("Hello, What's your name? ")
-    valid_input = False
+    valid_input, age = False, -1
     while not valid_input:
         valid_input, age = validate_age(name)
+
     game = FrogWorld if age < 18 else WizardWorld
     env = GameEvn(game(name))
     env.play()
