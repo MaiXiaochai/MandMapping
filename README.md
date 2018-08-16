@@ -1,2 +1,2 @@
 # MindMapping
-Some reading notes or ideas mindmappings.
+Some mindmappings of reading notes and ideas.
