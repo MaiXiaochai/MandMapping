@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# @File:     coroutine_code.py
+# @Project:  src
+# @Date:     2018/10/11 20:01
+# @Author:   MaiXiaochai
+
 
 def minimize():
     """
