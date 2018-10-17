@@ -6,6 +6,7 @@
 # @Site :       : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
+import copy
 from collections import OrderedDict
 
 """
@@ -33,7 +34,15 @@ DEMO:
 
 class Book:
     def __init__(self, name, authors, price, **rest):
-        """rest的例子有：出版商、长度、标签、出版日期"""
+        """rest的例子有：出版商、长度、标签、出版日期
+        book = Book('python', 'Wang', 10, price=100)
+        print(book)
+        out:
+            authors: Wang
+            name: python
+            pages: 100
+            price: 10$
+        """
         self.name = name
         self.authors = authors
         self.price = price
@@ -43,6 +52,8 @@ class Book:
 
     def __str__(self):
         my_list = []
+
+        # 按照key排序，组成有序字典
         ordered = OrderedDict(sorted(self.__dict__.items()))
 
         for i in ordered.keys():
@@ -50,10 +61,37 @@ class Book:
             if i == 'price':
                 my_list.append('$')
             my_list.append('\n')
-        print(my_list)
         return ''.join(my_list)
 
 
+class Prototype:
+    """
+    该类实现了原型设计模式。核心是clone()方法，该方法使用copy.deepcopy()实现真正的克隆工作。
+    但该类还做了更多的事情，它包含register()和unregister()，这两个方法用于在一个字典中追踪被克隆的对象。
+    使用变长列表attr，可以仅传递那些在克隆一个对象时真正需要变更的属性变量。
+    """
+    def __init__(self):
+        self.objects = dict()
+        
+    def register(self, identifier, obj):
+        self.objects[identifier] = obj
+    
+    def unregister(self, identifier):
+        del self.objects[identifier]
+        
+    def clone(self, identifier, **attr):
+        found = self.objects.get(identifier)
+        if not found:
+            raise ValueError('Incorrect objects identifier: {}'.format(identifier))
+        
+        obj = copy.deepcopy(found)
+        obj.__dict__.update(attr)
+        return obj
+
+
+def main():
+    pass
+
+
 if __name__ == '__main__':
-    book = Book('python', 'Zhang', 10, pages=100)
-    print(book)
+    pass
