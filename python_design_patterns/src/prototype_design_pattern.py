@@ -53,7 +53,7 @@ class Book:
     def __str__(self):
         my_list = []
 
-        # 按照key排序，组成有序字典
+        # 按照key排序，组成有序字典,sorted后边这种写法不优雅
         ordered = OrderedDict(sorted(self.__dict__.items()))
 
         for i in ordered.keys():
