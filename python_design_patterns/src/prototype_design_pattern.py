@@ -90,8 +90,47 @@ class Prototype:
 
 
 def main():
-    pass
+    b1 = Book('The C Programming Language', ('Brian W Kernighan', 'Denis M Ritchie'),
+              price=118, publisher='Prentice Hall', length='228',
+              publication_date='1978-02-22', tags=('C', 'programming', 'algorithms', 'data structures'))
+    prototype = Prototype()
+    cid = 'k&r-first'
+
+    # 这里注册了b1
+    prototype.register(cid, b1)
+
+    # 这里深层拷贝了b1，并对b1的一些属性进行了修改。不要被复杂的外表所迷惑，
+    # 其实就是深层拷贝了一个字典，然后对字典里边的某些键值对进行了修改
+    b2 = prototype.clone(cid, name='The C Programming Language(ANSI)', price=48.99,
+                         length=274, publication_date='1988-04-01', edition=2)
+
+    for i in (b1, b2):
+        print(i)
+
+    print("ID b1:{} != ID b2: {}".format(id(b1), id(b2)))
+
+    """
+    Out:
+    authors: ('Brian W Kernighan', 'Denis M Ritchie')
+    length: 228
+    name: The C Programming Language
+    price: 118$
+    publication_date: 1978-02-22
+    publisher: Prentice Hall
+    tags: ('C', 'programming', 'algorithms', 'data structures')
+    
+    authors: ('Brian W Kernighan', 'Denis M Ritchie')
+    edition: 2
+    length: 274
+    name: The C Programming Language(ANSI)
+    price: 48.99$
+    publication_date: 1988-04-01
+    publisher: Prentice Hall
+    tags: ('C', 'programming', 'algorithms', 'data structures')
+    
+    ID b1:2311079469968 != ID b2: 2311079472656"""
 
 
 if __name__ == '__main__':
-    pass
+    main()
+
