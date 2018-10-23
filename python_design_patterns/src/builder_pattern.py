@@ -123,13 +123,13 @@ class HardwareEngineer:
     def computer(self):
         return self.builder.computer
 
-
+    """
 def main():
     engineer = HardwareEngineer()
     engineer.construct_computer(hdd=500, memory=8, gpu='GeForce GTX 650 Ti')
     computer = engineer.computer
     print(computer)
-    """
+    
     Out:
     Model: AG23385193
     Memory: 8GB
@@ -239,9 +239,117 @@ class CreamyBaconBuilder:
         self.baking_time = 7
 
     def prepare_dough(self):
-        pass
-        # to be continued ...
+        self.progress = PizzaProgress.preparation
+        self.pizza.prepare_dough(PizzaDough.thick)
+
+    def add_sauce(self):
+        print('adding the creme fraiche sauce to your creamy bacon')
+
+        # 这步是实打实的给pizza加了sauce，并不是只print（嘴上说说）而已
+        self.pizza.sauce = PizzaSauce.creme_fraiche
+        time.sleep(STEP_DELAY)
+        print('done with the creme fraiche sauce')
+
+    def add_topping(self):
+        print('adding the topping(mozzarella, bacon, ham, mushroom, red onion, oregano) to your creamy bacon')
+        self.pizza.topping.append([t for t in (PizzaTopping.mozzarella, PizzaTopping.bacon, PizzaTopping.ham,
+                                               PizzaTopping.mushroom, PizzaTopping.red_onion, PizzaTopping.oregano)])
+        time.sleep(STEP_DELAY)
+
+    def bake(self):
+        self.progress = PizzaProgress.baking
+        print('baking your creamy bacon for {} seconds'.format(self.baking_time))
+        time.sleep(self.baking_time)
+        self.progress = PizzaProgress.ready
+        print('your creamy bacon is ready')
+
+
+class Waiter:
+    """
+    指挥者是服务员。
+    该类的核心是construct_pizza方法，该方法接受一个建造者作为参数，并以正确的顺序执行披萨的所有准备步骤。
+    选择恰当的建造者（甚至可以在运行时选择）。无需修改指挥者（Waiter）的任何代码，就能制作不同的披萨。
+    Waiter类还包含pizza()方法，会向调用者返回最终产品（准备好的披萨）。
+    """
+    def __init__(self):
+        self.builder = None
+
+    def construct_pizza(self, builder):
+        self.builder = builder
+        [step() for step in (builder.prepare_dough, builder.add_sauce, builder.add_topping, builder.bake)]
+
+    @property
+    def pizza(self):
+        return self.builder.pizza
+
+
+def validate_style(builders):
+    """
+    validate_style()类似于第1章中描述的validate_age()函数，用于确保用户提供有效的输入，
+    当前案例中这个输入是映射到一个披萨建造者的字符；m表示使用MargaritaBuilder类，c表示CreamyBuilder类。
+    这些映射关系存储在builders中。该函数返回一个元组，若输入有效，则元组的第一个元素为True，否则为False。
+    :param builders:
+    :return:
+    """
+
+    valid_input, builder = False, None
+    try:
+        pizza_style = input('What pizza would you like, [m]argarita or [c]reamy bacon?')
+        builder = builders[pizza_style]()
+        valid_input = True
+
+    except KeyError as err:
+        print('Sorry, only margarita (key m) and creamy bacon (key c) are avaliable')
+
+    return valid_input, builder
+
+
+def main():
+    """
+    实例化一个披萨建造者，然后指挥者Waiter使用披萨建造者来准备披萨。
+    创建好的披萨可在稍后的时间点交付给客户端。
+    :return:
+    Out: c
+        preparing the thick dough of your Creamy bacon ...
+        done with the thick dough
+        adding the creme fraiche sauce to your creamy bacon
+        done with the creme fraiche sauce
+        adding the topping(mozzarella, bacon, ham, mushroom, red onion, oregano) to your creamy bacon
+        baking your creamy bacon for 7 seconds
+        your creamy bacon is ready
+
+        Enjoy your Creamy bacon
+
+    Out: m
+        preparing the thin dough of your margarita ...
+        done with the thin dough
+        adding the tomato sauce to your matgarita ...
+        done with the tomato sauce
+        adding the topping (double mozzarella, oregano) to your margarita
+        done with the topping (double mozzarella, oregano)
+        baking your margarita for 5 seconds
+
+        Enjoy your margarita
+
+    Out: wrong letter
+        Sorry, only margarita (key m) and creamy bacon (key c) are avaliable
+        What pizza would you like, [m]argarita or [c]reamy bacon?
+    """
+
+    builders = dict(m=MargaritaBuilder, c=CreamyBaconBuilder)
+    valid_input, builder = False, None
+
+    while not valid_input:
+        valid_input, builder = validate_style(builders)
+
+    print()
+    waiter = Waiter()
+    waiter.construct_pizza(builder)
+    pizza = waiter.pizza
+    print()
+
+    print('Enjoy your {}'.format(pizza))
 
 
 if __name__ == '__main__':
-    pass
+    main()
