@@ -351,5 +351,58 @@ def main():
     print('Enjoy your {}'.format(pizza))
 
 
+# --------------------------------------------------------------------------------
+# 流利的建造者
+
+class PizzaSec:
+    """
+    一种建造者变体，这种变体会链式地调用建造者方法。通过建造者本身定义为内部类并从每个设置器方法返回自身来实现。
+    方法build()返回最终的对象。这个模式被称为 流利的建造者。
+    """
+    def __init__(self, builder):
+        # garlic 大蒜
+        self.garlic = builder.garlic
+
+        # extra_cheese 额外的奶酪
+        self.extra_cheese = builder.extra_cheese
+
+    def __str__(self):
+        garlic = 'yes' if self.garlic else 'no'
+        cheese = 'yes' if self.extra_cheese else 'no'
+        info = ('Garlic: {}'.format(garlic), 'Extra cheese: {}'.format(cheese))
+        return '\n'.join(info)
+
+    class PizzaBuilder:
+        def __init__(self):
+            self.extra_cheese = False
+            self.garlic = False
+
+        def add_garlic(self):
+            self.garlic = True
+            # self: <__main__.PizzaSec.PizzaBuilder object at 0x000001B12EF3CA90>
+            return self
+
+        def add_extra_cheese(self):
+            self.extra_cheese = True
+            return self
+
+        def build(self):
+            return PizzaSec(self)
+
+
 if __name__ == '__main__':
-    main()
+    """
+    Out:
+        Garlic: yes
+        Extra cheese: yes
+    解析：
+    1)PizzaBuilder()产生一个实例，但这个实例没有变量名称；
+    2)PizzaBuilder().add_garlic() 实例本身调用add_garlic()方法，改变实例garlic的值为True；
+    3)PizzaBuilder().add_garlic().add_extra_cheese()同2)；
+    4)PizzaBuilder().add_garlic().add_extra_cheese().build()，返回一个PizzaSec实例，
+      并以PizzaBuilder的实例（即一个实例化的、配置好的builder，
+      这个builder拥有builder.garlic=True和builder.extra_cheese=True的属性值）作为参数，
+      这个PizzaSec实例赋给了pizza变量。
+    """
+    pizza = PizzaSec.PizzaBuilder().add_garlic().add_extra_cheese().build()
+    print(pizza)
