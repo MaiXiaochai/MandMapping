@@ -83,7 +83,7 @@ def main():
     在main()函数中，将所有execute应该指向的方法，在其对应的类的__dict__中，将key都改为了'execute'。
     :return:
     """
-    
+
     objects = [Computer('Asus')]
     synth = Synthesizer('moog')
     objects.append(Adapter(synth, dict(execute=synth.play)))
