@@ -7,6 +7,8 @@
 # @Author       : maixiaochai
 
 from timeit import Timer
+from functools import wraps
+
 
 """
 修饰（装饰）器模式： 以透明的方式，动态地（运行时）扩展一个对象的功能
@@ -45,6 +47,7 @@ from timeit import Timer
 def fibonacci(n):
     """
     朴素斐波那切数列
+    性能较差
     :param n:       int     大于等于0的整数
     :return:
     """
@@ -58,6 +61,7 @@ known = {0: 0, 1: 1}
 def fbnc(n):
     """
     改进菲波那切数列
+    性能不再是问题，但代码不够简洁
     :param n:       int     大于等于0的整数
     :return:
     """
@@ -69,6 +73,71 @@ def fbnc(n):
     res = fbnc(n - 1) + fbnc(n - 2)
     known[n] = res
     return res
+
+
+# --------------------------------------------------------------------------------------------------------------
+# 扩展代码，加入更多的数学函数，并将其转变成一个模块。加入nsum()函数，返回前n个数字的和。
+# 该函数已由math.fsum()实现，这里假设Python自带库并未实现该功能，因为你会遇到很多需求但是标准库里没有的情况。
+
+
+known_sum = {0: 0}
+
+
+def nsum(n):
+    assert(n >= 0), 'n must be >= 0'
+    if n in known_sum:
+        return known_sum[n]
+
+    res = n + nsum(n - 1)
+    known_sum[n] = res
+    return res
+
+# 多了一个known_sum的新字典，为nsum提供缓存，函数本身也比不使用memoization时的更复杂。
+# 这个模块逐步变得不必要地复杂。如何保持递归函数与朴素版本的一样简单，但在性能上又能与使用memoization的函数相近？--修饰器
+
+
+def memoize(fn):
+    """
+    该修饰器接受一个需要使用memoization的函数fn作为输入，使用一个名为known的dict作为缓存。
+    warps能保留被它修饰的函数的文档和签名。推荐使用。
+    这里设置了参数列表*args,因为被修饰的函数有可能有输入参数。
+    :param fn:      obj     函数
+    :return:        obj     函数
+    """
+    known = dict()
+
+    @wraps(fn)
+    def memoizer(*args):
+        if args not in known:
+            known[args] = fn(*args)
+        return known[args]
+
+    return memoizer
+
+
+# -----------------------------------------------------------------------------------------------------------------
+# 修饰器应用
+
+@memoize
+def nsum(n):
+    """
+    返回前n个数字的和
+    :param n:       int     整数
+    :return:        int     前n个数字的和
+    """
+    assert(n >= 0), 'n must be >= 0'
+    return 0 if n == 0 else n + nsum(n - 1)
+
+
+@memoize
+def fbncd(n):
+    """
+
+    :param n:
+    :return:
+    """
+    assert(n >= 0), 'n must be >= 0'
+    return n if n in (0, 1) else fbncd(n - 1) + fbncd(n - 2)
 
 
 def main():
@@ -84,8 +153,8 @@ def main():
     # t = Timer('fibonacci(8)', 'from __main__ import fibonacci')
     # print(t.timeit())
 
-    t = Timer('fbnc(100)', 'from __main__ import fbnc')
-    print(t.timeit())
+    # t = Timer('fbnc(100)', 'from __main__ import fbnc')
+    # print(t.timeit())
 
 
 if __name__ == '__main__':
