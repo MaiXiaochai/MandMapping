@@ -132,12 +132,53 @@ def nsum(n):
 @memoize
 def fbncd(n):
     """
-
+    返回菲波那切数列第n个数
     :param n:
     :return:
     """
     assert(n >= 0), 'n must be >= 0'
     return n if n in (0, 1) else fbncd(n - 1) + fbncd(n - 2)
+
+
+def main_test():
+    """
+    展示如何使用被修饰的函数，并测试其性能。
+    measure是一个字典列表，用于避免代码重复。
+    __name__和__doc__分别是如何展示正确的函数名称和文档字符串值的。
+    :return:
+
+    Out:
+    name: fbncd,doc:
+    返回菲波那切数列第n个数
+    :param n:
+    :return:
+    ,executing: fbncd(100), time: 0.23861463099999997
+
+    name: nsum,doc:
+    返回前n个数字的和
+    :param n:       int     整数
+    :return:        int     前n个数字的和
+    ,executing: nsum(200), time: 0.24195961499999996
+    """
+
+    measure = [
+        {'exec': 'fbncd(100)',
+         'import': 'fbncd',
+         'func': fbncd},
+        {'exec': 'nsum(200)',
+         'import': 'nsum',
+         'func': nsum}
+    ]
+
+    for m in measure:
+        t = Timer('{}'.format(m['exec']), 'from __main__ import {}'.format(m['import']))
+        print('name: {},'
+              'doc: {},'
+              'executing: {}, '
+              'time: {}'.format(m['func'].__name__,
+                                m['func'].__doc__,
+                                m['exec'],
+                                t.timeit()))
 
 
 def main():
@@ -158,4 +199,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main_test()
