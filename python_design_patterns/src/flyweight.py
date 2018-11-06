@@ -75,5 +75,3 @@ class Tree:
             cls.pool[tree_type] = obj
             obj.tree_type = tree_type
         return obj
-
-
