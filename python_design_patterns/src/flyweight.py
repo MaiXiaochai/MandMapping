@@ -45,7 +45,7 @@ memoization 与 享元模式间的区别：
 构造一小片果树的森林，小到能确保在单个终端页面中阅读整个输出。然而，无论你构造的森林有多大，内存分配都保持相同。
 """
 
-tree_type = Enum('TreeType', 'apple_tree cherry_tree peach_tree')
+tree_type_all = Enum('TreeType', 'apple_tree cherry_tree peach_tree')
 
 
 class Tree:
@@ -63,7 +63,7 @@ class Tree:
         4)__init__有一个参数self，就是这个__new__返回的实例，__init__在__new__的基础上可以完成一些其它初始化的动作，
          __init__不需要返回值。
 
-         参考文献：[https://blog.csdn.net/qq_37616069/article/details/79476249]
+        [参考文献：https://blog.csdn.net/qq_37616069/article/details/79476249]
     """
     pool = dict()
 
@@ -75,3 +75,92 @@ class Tree:
             cls.pool[tree_type] = obj
             obj.tree_type = tree_type
         return obj
+
+    def render(self, age, x, y):
+        """
+        享元不知道的所有可变（外部）信息都需要由客户端代码显示地传递。
+        每棵树都用到一个随机的年龄和一个x，y形式的位置。为了让render()更加有用，
+        有必要确保没有树会被渲染到另一棵上。
+        render 渲染，着色
+        """
+        print('render a tree of type {} at ({}, {})'.format(self.tree_type, age, x, y))
+
+
+def main():
+    """
+    一棵树的年龄是1~30年间的随机数，坐标是0~100之间的随机值。虽然渲染了18棵树，但仅分配了3棵树的内存。
+    输出的最后一行证明当时用享元时，我们不能依赖对象的ID。
+    CPython(Python的官方实现)正好使用对象的内存地址作为唯一性ID。
+    在本例中，即使两个对象看起来不相同，但是如果它们属于同一个享元家族（这里家族由tree_type定义），那么它们实际上有相同的ID。
+    :return:
+    """
+    rnd = random.Random()
+    age_min, age_max = 1, 30
+    point_min, point_max = 0, 100
+    tree_counter = 0
+
+    for _ in range(10):
+        t1 = Tree(tree_type_all.apple_tree)
+        t1.render(rnd.randint(age_min, age_max),
+                  rnd.randint(point_min, point_max),
+                  rnd.randint(point_min, point_max))
+        tree_counter += 1
+
+    print('-' * 60)
+    for _ in range(3):
+        t2 = Tree(tree_type_all.cherry_tree)
+        t2.render(rnd.randint(age_min, age_max),
+                  rnd.randint(point_min, point_max),
+                  rnd.randint(point_min, point_max))
+        tree_counter += 1
+    print('-' * 60)
+
+    for _ in range(5):
+        t3 = Tree(tree_type_all.peach_tree)
+        t3.render(rnd.randint(age_min, age_max),
+                  rnd.randint(point_min, point_max),
+                  rnd.randint(point_min, point_max))
+        tree_counter += 1
+    print('-' * 60)
+
+    print('trees rendered: {}'.format(tree_counter))
+    print('tree actually created: {}'.format(len(Tree.pool)))
+
+    t4 = Tree(tree_type_all.cherry_tree)
+    t5 = Tree(tree_type_all.cherry_tree)
+    t6 = Tree(tree_type_all.apple_tree)
+
+    print('{} == {} ? {}'.format(id(t4), id(t5), id(t4) == id(t5)))
+    print('{} == {} ? {}'.format(id(t5), id(t6), id(t5) == id(t6)))
+
+
+if __name__ == '__main__':
+    """
+    Out:
+    render a tree of type TreeType.apple_tree at (14, 45)
+    render a tree of type TreeType.apple_tree at (27, 98)
+    render a tree of type TreeType.apple_tree at (10, 82)
+    render a tree of type TreeType.apple_tree at (28, 18)
+    render a tree of type TreeType.apple_tree at (12, 46)
+    render a tree of type TreeType.apple_tree at (27, 50)
+    render a tree of type TreeType.apple_tree at (15, 72)
+    render a tree of type TreeType.apple_tree at (11, 32)
+    render a tree of type TreeType.apple_tree at (2, 52)
+    render a tree of type TreeType.apple_tree at (1, 45)
+    ------------------------------------------------------------
+    render a tree of type TreeType.cherry_tree at (5, 73)
+    render a tree of type TreeType.cherry_tree at (9, 70)
+    render a tree of type TreeType.cherry_tree at (18, 77)
+    ------------------------------------------------------------
+    render a tree of type TreeType.peach_tree at (29, 47)
+    render a tree of type TreeType.peach_tree at (10, 49)
+    render a tree of type TreeType.peach_tree at (22, 47)
+    render a tree of type TreeType.peach_tree at (14, 43)
+    render a tree of type TreeType.peach_tree at (29, 87)
+    ------------------------------------------------------------
+    trees rendered: 18
+    tree actually created: 3
+    1788111989560 == 1788111989560 ? True
+    1788111989560 == 1788112076248 ? False
+    """
+    main()
