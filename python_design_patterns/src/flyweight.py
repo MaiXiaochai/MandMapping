@@ -92,7 +92,12 @@ def main():
     输出的最后一行证明当时用享元时，我们不能依赖对象的ID。
     CPython(Python的官方实现)正好使用对象的内存地址作为唯一性ID。
     在本例中，即使两个对象看起来不相同，但是如果它们属于同一个享元家族（这里家族由tree_type定义），那么它们实际上有相同的ID。
-    :return:
+
+    random.Random()和random.random()的关系：
+    1）前者生成0和1之间的随机浮点数float；
+    2）前者其实是一个隐藏的random.Random()类的实例的random方法；
+    3）random.random()和random.Random().random()作用是一样的；
+    4）random.Random()生成random模块里的Random类的一个实例，这个实例不会和其他Random实例共享状态，一般是在多线程的情况下使用。
     """
     rnd = random.Random()
     age_min, age_max = 1, 30
