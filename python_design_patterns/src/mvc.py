@@ -177,6 +177,19 @@ def main():
     Which quote number would you like ro see? 0
     And the qoute is : "A man is not complete until he is married. Then he is finished."
     Which quote number would you like ro see?
+
+    小结:
+        1）每个部分都有明确的职责。
+            模型负责访问数据，管理应用的状态；
+            视图是模型的外在表现。视图并非必须是图像化的，文字输出也是一种好视图；
+            控制器是模型与视图之间的连接。
+            MVC的恰当使用能保证最终产出的应用易于维护、易于扩展。
+
+        2）使用MVC时，
+            请确保创建智能的模型（核心功能），
+            瘦控制器（实现视图与模型之间通信的能力）以及
+            傻瓜式的视图（外在表现，最小化逻辑处理）。
+
     """
     controller = QuoteTerminalController()
     while True:
