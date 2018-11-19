@@ -47,3 +47,49 @@ class LazyProperty:
         # print('value {}'.format(value))
         setattr(obj, self.method_name, value)
         return value
+
+
+class Test:
+    """
+    该类主要演示如何使用LazyProperty类。
+    """
+    def __init__(self):
+        """我们想懒加载_resource变量，因此将其初始化为None"""
+        self.x = 'foo'
+        self.y = 'bar'
+        self._resource = None
+
+    @LazyProperty
+    def resource(self):
+        """
+        使用LazyProperty类修饰。因演示目的，LazyProperty类将_resource属性初始化为一个tuple。
+        通常来说这是一个缓慢/代价大的初始化过程（初始化数据库、图形等）。
+        """
+        print('initializing self._resource which is: {}'.format(self._resource))
+
+        # 假设这一行的计算成本比较大
+        self._resource = tuple(range(5))
+        return self._resource
+
+
+def main():
+    """
+    展示初始化是如何进行的。
+    注意，__get__()访问方法的重写使得可以将resource()方法当作一个变量（可以使用t.resource代替t.resource()）。
+
+    Out:
+    foo
+    bar
+    initializing self._resource which is: None
+    (0, 1, 2, 3, 4)
+    (0, 1, 2, 3, 4)
+    """
+    t = Test()
+    print(t.x)
+    print(t.y)
+    print(t.resource)
+    print(t.resource)
+
+
+if __name__ == '__main__':
+    main()
