@@ -59,6 +59,8 @@ class Event:
 class Widget:
     """
     应用的核心类
+    每个控件都有一个到父对象的引用。我们嘉定副对象是一个Widget实例。根据继承规则，任何Widget子类的实例（如MsgText的实例）也是
+    #Widget实例。
     """
-    pass
-
+    def __init__(self, parent=None):
+        self.parent = parent
