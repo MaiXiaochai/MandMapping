@@ -72,6 +72,8 @@ class Widget:
     def handle(self, event):
         handler = 'handle_{}'.format(event)
         if hasattr(self, handler):
+            # getattr()用于返回一个对象的属性值
+            # getattr(self, handler) get self 对象的handler属性值
             method = getattr(self, handler)
             method(event)
 
