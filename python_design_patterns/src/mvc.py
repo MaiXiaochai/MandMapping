@@ -3,7 +3,7 @@
 # @File         : mvc.py
 # @Project      : src
 # @Time         : 2018/11/8 21:45
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 """

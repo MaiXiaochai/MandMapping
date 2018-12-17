@@ -3,7 +3,7 @@
 # @File         : proxy.py
 # @Project      : src
 # @Time         : 2018/11/13 23:11
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 """

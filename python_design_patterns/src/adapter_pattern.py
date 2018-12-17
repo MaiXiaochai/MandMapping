@@ -3,7 +3,7 @@
 # @File         : adapter_pattern.py
 # @Project      : MindMapping
 # @Time         : 2018/10/24 23:45
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 """

@@ -3,7 +3,7 @@
 # @File         : chain_of_responsibility.py
 # @Project      : src
 # @Time         : 2018/11/21 22:41
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 """

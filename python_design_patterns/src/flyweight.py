@@ -3,7 +3,7 @@
 # @File         : flyweight.py
 # @Project      : src
 # @Time         : 2018/11/5 23:16
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 import random

@@ -3,7 +3,7 @@
 # @File         : prototype_design_pattern.py
 # @Project      : mindmapping
 # @Time         : 2018/10/15 23:44
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 import copy

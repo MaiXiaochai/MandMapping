@@ -3,7 +3,7 @@
 # @File         : decorator_pattern.py
 # @Project      : src
 # @Time         : 2018/10/29 22:50
-# @Site :       : https://github.com/MaiXiaochai
+# @Site         : https://github.com/MaiXiaochai
 # @Author       : maixiaochai
 
 from timeit import Timer
