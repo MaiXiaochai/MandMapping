@@ -186,7 +186,7 @@ def main():
              'turn on -> aircondition',
              'turn off -> heating',
              'increase -> boiler temperature -> 5 degrees',
-             'decrease -> boiler temperature -> 2 degrees')
+             'decrease -> fridge temperature -> 2 degrees')
 
     open_actions = {'gate': gate.open,
                     'garage': garage.open,
@@ -239,6 +239,6 @@ if __name__ == '__main__':
     turning on the aircondition
     turning off the heating
     increasing the boiler's temperature by 5 degrees
-    decreasing the boiler's temperature by 2 degrees
+    decreasing the fridge's temperature by 2 degrees
     """
     main()
