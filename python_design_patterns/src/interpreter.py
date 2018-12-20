@@ -206,10 +206,10 @@ def main():
         if len(event.parseString(t)) == 2:  # 没有参数
             cmd, dev = event.parseString(t)
             cmd_str, dev_str = ' '.join(cmd), ' '.join(dev)
-            if 'open' in cmd_str or 'turn_on' in cmd_str:
+            if 'open' in cmd_str or 'turn on' in cmd_str:
                 open_actions[dev_str]()
 
-            elif 'close' in cmd_str or 'turn_off' in cmd_str:
+            elif 'close' in cmd_str or 'turn off' in cmd_str:
                 close_actions[dev_str]()
 
         elif len(event.parseString(t)) == 3:  # 有参数
@@ -235,6 +235,8 @@ if __name__ == '__main__':
     out:
     opening the gate
     closing the gate
+    turning on the aircondition
+    turning off the heating
     increasing the boiler's temperature by 5 degrees
     decreasing the boiler's temperature by 2 degrees
     """
