@@ -207,6 +207,7 @@ def main():
             cmd, dev = event.parseString(t)
             cmd_str, dev_str = ' '.join(cmd), ' '.join(dev)
             if 'open' in cmd_str or 'turn on' in cmd_str:
+                # 这种调用方法的方法很值得学习 2018年12月20日23:56:07
                 open_actions[dev_str]()
 
             elif 'close' in cmd_str or 'turn off' in cmd_str:
