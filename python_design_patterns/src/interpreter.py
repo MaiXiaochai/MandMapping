@@ -47,6 +47,7 @@ from pyparsing import Word, OneOrMore, Optional, Group, Suppress, alphanums
 # 定义简单语法，用 巴科斯-诺尔 形式表示法来定义语法
 """
     event :: = command token receiver token arguments
+        (demo: increase -> boiler temperature -> 3 degrees)
     command :: = word+
     word :: = a collection of one or more alphanumeric(字母数字的) characters
     token :: = ->
@@ -173,6 +174,12 @@ def main():
     device = Group(OneOrMore(word))
     argument = Group(OneOrMore(word))
     event = command + token + device + Optional(token + argument)
+    # print(event)
+    # print(type(event))
+    """
+    {{{Group:({W:(ABCD...)}...) Suppress:("->")} Group:({W:(ABCD...)}...)} [{Suppress:("->") Group:({W:(ABCD...)}...)}]}
+    <class 'pyparsing.And'>
+    """
 
     gate = Gate()
     garage = Garage()
