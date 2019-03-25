@@ -20,10 +20,13 @@
 4）事件驱动系统是另一个可以使用（通常也会使用）观察者模式的例子。监听者被用于监听特定事件（如键盘键入某个键）。
     事件扮演发布者的角色，监听者则扮演观察者的角色。
 
+5)当我们希望在一个对象（主持者/发布者/可观察者）发生变化时通知/更新另一个或多个对象的时候，通常会使用观察者模式。
 """
 
 
-# 实现一个数据格式化程序。默认格式化程序是以十进制格式展示一个数值，我们添加/注册十六进制和二进制格式化程序
+# 实现一个数据格式化程序。默认格式化程序是以十进制格式展示一个数值，我们可以添加/注册十六进制和二进制格式化程序，
+# 当然，我们可以添加/注册更多的格式化程序。每次更新默认格式化程序的值时，已注册的格式化程序就会收到通知，并采取行动。
+# 在这里，行动就是以相关的格式展示新的值。
 # 在一些模式中，继承能体现自身价值，观察者模式是这些模式中的一个。我们实现一个基类Publisher，
 # 包括添加、删除及通知观察者这些公用功能。
 
@@ -48,6 +51,7 @@ class Publisher:
         """
         在变化发生时通知所有观察者
         """
+        # o.notify(self)这里其实是在调用订阅者本身的notify()方法
         [o.notify(self) for o in self.observers]
 
 
@@ -68,3 +72,95 @@ class DefaultFormatter(Publisher):
         这降低了代码的可读性，却提高了代码的可维护性。
         """
         return "{}: '{}' has data = {}".format(type(self).__name__, self.name, self._data)
+
+    @property
+    def data(self):
+        """
+        @property修饰器，提供变量_data的读访问方式，使用object.data代替object.data()
+        """
+        return self._data
+
+    @data.setter
+    def data(self, new_value):
+        """
+        使用了@setter修饰器，该修饰器会在每次使用赋值操作(=)为_data变量赋新值时被调用。
+        就方法本身而言，它尝试吧新值强制类型转换为一个整数，并在类型转换失败时处理异常。
+        :param new_value:
+        :return:
+        """
+        try:
+            self._data = int(new_value)
+        except ValueError as e:
+            print("Error: {}".format(e))
+        else:
+            # 如果try里边的语句正常执行，然后就执行else里的语句
+            self.notify()
+
+
+class HexFormatter:
+    """
+    十六进制观察者
+    """
+    def notify(self, publisher):
+        print("{}: '{}' has now hex data = {}".format(type(self).__name__, publisher.name, hex(publisher.data)))
+
+
+class BinaryFormatter:
+    """
+    二进制观察者
+    """
+    def notify(self, publisher):
+        print("{}: '{}' has now bin data = {}".format(type(self).__name__, publisher.name, bin(publisher.data)))
+
+
+def main():
+    df = DefaultFormatter('test1')
+    print(df, '\n')
+
+    hf = HexFormatter()
+    df.add(hf)
+    df.data = 3
+    print(df, '\n')
+
+    bf = BinaryFormatter()
+    df.add(bf)
+    df.data = 21
+    print(df, '\n')
+
+    df.remove(hf)
+    df.data = 40
+    print(df, '\n')
+
+    df.remove(hf)
+    df.add(bf)
+    df.data = 'hello'
+    print(df, '\n')
+
+    df.data = 15.8
+    print(df)
+
+
+if __name__ == "__main__":
+    main()
+    """
+    out:
+    DefaultFormatter: 'test1' has data = 0 
+
+    HexFormatter: 'test1' has now hex data = 0x3
+    DefaultFormatter: 'test1' has data = 3 
+    
+    HexFormatter: 'test1' has now hex data = 0x15
+    BinaryFormatter: 'test1' has now bin data = 0b10101
+    DefaultFormatter: 'test1' has data = 21 
+    
+    BinaryFormatter: 'test1' has now bin data = 0b101000
+    DefaultFormatter: 'test1' has data = 40 
+    
+    Failed to remove: <__main__.HexFormatter object at 0x00000236CF4151D0>
+    Falied to add: <__main__.BinaryFormatter object at 0x00000236CF4155F8>
+    Error: invalid literal for int() with base 10: 'hello'
+    DefaultFormatter: 'test1' has data = 40 
+    
+    BinaryFormatter: 'test1' has now bin data = 0b1111
+    DefaultFormatter: 'test1' has data = 15
+    """
